@@ -5,6 +5,7 @@ import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.MessageListener
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.MongoOperations
 
 import java.time.Duration
 import java.util.concurrent.atomic.AtomicInteger
@@ -24,6 +25,9 @@ class Consumer implements MessageListener {
     @Autowired
     ApplicationProperties configuration
 
+    @Autowired
+    private MongoOperations theTemplate
+
     @Override
     @RabbitListener( queues = 'bare-metal-consumer' )
     void onMessage( Message message ) {
@@ -31,8 +35,17 @@ class Consumer implements MessageListener {
         start.compareAndSet( 0, System.currentTimeMillis() )
         now.set( System.currentTimeMillis() )
         def currentValue = counter.incrementAndGet()
+
+        def model = createModel( message )
+        theTemplate.insert( model )
+
         def durationMillis = duration.updateAndGet({ now.get() - start.get() } )
         def durationISO = Duration.ofMillis( durationMillis )
         0 == currentValue % configuration.modvalue ? log.info( '{} messages has taken {} to process', currentValue, durationISO as String ) : ''
+
+    }
+
+    private static Model createModel( Message message ) {
+        new Model( primaryKey: UUID.fromString( message.messageProperties.messageId ), timestamp: message.messageProperties.timestamp,  randomBytes: message.body )
     }
 }
