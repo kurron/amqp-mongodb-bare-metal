@@ -26,7 +26,7 @@ CMD="docker run \
             --network host \
             --rm \
             --tty \
-            kurron/amqp-bare-metal-consumer:latest"
+            kurron/amqp-mongodb-bare-metal:latest"
 
 echo ${CMD}
 ${CMD}
