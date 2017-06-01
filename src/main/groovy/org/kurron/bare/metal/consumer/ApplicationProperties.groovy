@@ -12,4 +12,5 @@ class ApplicationProperties {
     String queue
     String routingKey
     int modvalue
+    int expectedMessageCount
 }
