@@ -14,11 +14,17 @@ class CustomApplicationRunner implements ApplicationRunner {
 
     @Autowired
     private MongoOperations theTemplate
+
+    @Autowired
+    ApplicationProperties configuration
+
     @Override
     void run( ApplicationArguments args ) {
 
         log.info( 'Dropping the Model collection' )
         theTemplate.dropCollection( Model )
 
+        log.info( 'Will process {} messages before exiting.', configuration.expectedMessageCount )
+        log.info( 'Will report progress every {} messages.', configuration.modvalue )
     }
 }

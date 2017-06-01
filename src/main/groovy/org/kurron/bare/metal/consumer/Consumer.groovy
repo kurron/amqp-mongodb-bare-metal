@@ -48,7 +48,7 @@ class Consumer implements MessageListener {
         0 == numberOfMessagesProcessed % configuration.modvalue ? log.info( '{} messages has taken {} to process', numberOfMessagesProcessed, durationISO as String ) : ''
 
         if ( numberOfMessagesProcessed == configuration.expectedMessageCount ) {
-            log.info( '{} messages has taken {} to process', numberOfMessagesProcessed, durationISO as String )
+            log.info( 'The expected {} messages has taken {} to process. Exiting the application.', numberOfMessagesProcessed, durationISO as String )
             theContext.close()
         }
     }

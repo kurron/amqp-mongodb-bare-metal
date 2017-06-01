@@ -5,8 +5,9 @@ VHOST=${2:-/}
 USERNAME=${3:-guest}
 PASSWORD=${4:-guest}
 MOD_COUNT=${5:-100}
-PREFETCH_COUNT=${6:-1}
-CONCURRENCY=${7:-1}
+EXPECTED_COUNT=${6:-2500}
+PREFETCH_COUNT=${7:-1}
+CONCURRENCY=${8:-1}
 
 CMD="docker run \
             --cpus 1 \
@@ -21,6 +22,7 @@ CMD="docker run \
             --env spring_rabbitmq_listener_max-concurrency=${CONCURRENCY} \
             --env spring_rabbitmq_cache_channel_size=${CONCURRENCY} \
             --env consumer_modvalue=${MOD_COUNT} \
+            --env consumer_expectedMessageCount=${EXPECTED_COUNT} \
             --interactive  \
             --name amqp-consumer \
             --network host \
