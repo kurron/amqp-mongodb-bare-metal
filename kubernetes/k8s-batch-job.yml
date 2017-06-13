@@ -1,0 +1,78 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+    name: amqp-mongodb-bare-metal-producer
+spec:
+    template:
+        metadata:
+            name: amqp-mongodb-bare-metal-producer
+        spec:
+            containers:
+                - name: amqp-mongodb-bare-metal-producer
+                  image: kurron/amqp-mongodb-bare-metal:latest
+                  args:
+                      - "--spring.rabbitmq.virtual-host=$(SPRING_RABBITMQ_VIRTUAL_HOST)"
+                      - "--spring_rabbitmq_listener_transaction-size=$(SPRING_RABBITMQ_LISTENER_TRANSACTION_SIZE)"
+                      - "--spring_rabbitmq_listener_max-concurrency=$(SPRING_RABBITMQ_LISTENER_MAX_CONCURRENCY)"
+                  env:
+                      - name: SPRING_RABBITMQ_HOST
+                        valueFrom:
+                            configMapKeyRef:
+                                key: host
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_VIRTUAL_HOST
+                        valueFrom:
+                            configMapKeyRef:
+                                key: virtual-host
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_USERNAME
+                        valueFrom:
+                            configMapKeyRef:
+                                key: username
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_PASSWORD
+                        valueFrom:
+                            configMapKeyRef:
+                                key: password
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_LISTENER_PREFETCH
+                        valueFrom:
+                            configMapKeyRef:
+                                key: prefetch-count
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_LISTENER_TRANSACTION_SIZE
+                        valueFrom:
+                            configMapKeyRef:
+                                key: prefetch-count
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_LISTENER_CONCURRENCY
+                        valueFrom:
+                            configMapKeyRef:
+                                key: concurrency
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_LISTENER_MAX_CONCURRENCY
+                        valueFrom:
+                            configMapKeyRef:
+                                key: concurrency
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_RABBITMQ_CACHE_CHANNEL_SIZE
+                        valueFrom:
+                            configMapKeyRef:
+                                key: concurrency
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: SPRING_DATA_MONGODB_URI
+                        valueFrom:
+                            configMapKeyRef:
+                                key: mongodb-url
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: CONSUMER_MODVALUE
+                        valueFrom:
+                            configMapKeyRef:
+                                key: modvalue
+                                name: amqp-mongodb-bare-metal-producer-configuration
+                      - name: CONSUMER_EXPECTEDMESSAGECOUNT
+                        valueFrom:
+                            configMapKeyRef:
+                                key: expected-message-count
+                                name: amqp-mongodb-bare-metal-producer-configuration
+            restartPolicy: Never

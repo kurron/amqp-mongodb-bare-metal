@@ -12,7 +12,6 @@ MONGODB_URL=${9:-mongodb://localhost:27017/bare-metal?safe=true&w=majority&readP
 
 CMD="docker run \
             --cpus 1 \
-            --env consumer_modvalue=1000 \
             --env spring_rabbitmq_host=${HOST} \
             --env spring_rabbitmq_virtual-host=${VHOST} \
             --env spring_rabbitmq_username=${USERNAME} \
